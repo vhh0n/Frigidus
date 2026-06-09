@@ -18,8 +18,8 @@ const documentacao = {
     tags: [
         { name: 'Usuários', description: 'Operações relacionadas aos usuários' },
         { name: 'Autenticação', description: 'Operações de autenticação' },
-        { name: 'Ambiente', description: 'Operações relacionadas aos ambientes' },
-        { name: 'Leitura', description: 'Operações relacionadas às leituras' }
+        { name: 'Ambientes', description: 'Operações relacionadas aos ambientes' },
+        { name: 'Leituras', description: 'Operações relacionadas às leituras' },
     ],
     paths: {
         "/usuarios": {
@@ -206,53 +206,59 @@ const documentacao = {
             }
         },
 
-        "/ambientes": {
-            get: {
-                tags: ["Ambiente"],
-                summary: "Listar ambientes",
-                responses: {
-                    200: {
-                        description: "Dados obtidos com sucesso",
-                        content: {
-                            "application/json": {
-                                schema: {
-                                    type: "array",
-                                    items: {
-                                        $ref: "#/components/schemas/Listar_Ambiente"
-                                    }
-                                }
+"/ambientes": {
+    get: {
+        tags: ["Ambientes"],
+        summary: "Listar ambientes",
+        security: [
+            {
+                bearerAuth: []
+            }
+        ],
+
+        responses: {
+            200: {
+                description: "Dados obtidos com sucesso",
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "array",
+                            items: {
+                                $ref: "#/components/schemas/Listar_Ambiente"
                             }
                         }
                     }
                 }
-            },
+            }
+        }
+    },
 
-            post: {
-                tags: ["Ambiente"],
-                summary: "Cadastrar ambiente",
+    post: {
+        tags: ["Ambientes"],
+        summary: "Cadastrar ambiente",
 
-                requestBody: {
-                    required: true,
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: "#/components/schemas/Cadastrar_Ambiente"
-                            }
-                        }
-                    }
-                },
-
-                responses: {
-                    201: {
-                        description: "Ambiente cadastrado com sucesso"
+        requestBody: {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/Cadastrar_Ambiente"
                     }
                 }
             }
         },
 
+        responses: {
+            201: {
+                description: "Ambiente cadastrado com sucesso"
+            }
+        }
+    }
+},
+
         "/ambientes/{id_ambiente}": {
             put: {
-                tags: ["Ambiente"],
+                tags: ["Ambientes"],
                 summary: "Atualizar ambiente",
                 parameters: [
                     {
@@ -265,7 +271,11 @@ const documentacao = {
                         }
                     }
                 ],
-
+                security: [
+                    {
+                        bearerAuth: []
+                    }
+                ],
                 requestBody: {
                     required: true,
                     content: {
@@ -291,9 +301,8 @@ const documentacao = {
                     }
                 }
             },
-
             delete: {
-                tags: ["Ambiente"],
+                tags: ["Ambientes"],
                 summary: "Excluir ambiente",
 
                 parameters: [
@@ -308,6 +317,12 @@ const documentacao = {
                     }
                 ],
 
+                security: [
+                    {
+                        bearerAuth: []
+                    }
+                ],
+
                 responses: {
                     200: {
                         description: "Ambiente removido com sucesso"
@@ -318,9 +333,13 @@ const documentacao = {
 
         "/leituras": {
             get: {
-                tags: ["Leitura"],
+                tags: ["Leituras"],
                 summary: "Listar leituras",
-
+                security: [
+                    {
+                        bearerAuth: []
+                    }
+                ],
                 responses: {
                     200: {
                         description: "Dados obtidos com sucesso",
@@ -339,7 +358,7 @@ const documentacao = {
             },
 
             post: {
-                tags: ["Leitura"],
+                tags: ["Leituras"],
                 summary: "Cadastrar leitura",
 
                 requestBody: {
@@ -363,7 +382,7 @@ const documentacao = {
 
         "/leituras/{id_leitura}": {
             put: {
-                tags: ["Leitura"],
+                tags: ["Leituras"],
                 summary: "Atualizar leitura",
 
                 parameters: [
@@ -378,7 +397,11 @@ const documentacao = {
                         }
                     }
                 ],
-
+                security: [
+                    {
+                        bearerAuth: []
+                    }
+                ],
                 requestBody: {
                     required: true,
                     content: {
@@ -409,7 +432,7 @@ const documentacao = {
             },
 
             delete: {
-                tags: ["Leitura"],
+                tags: ["Leituras"],
                 summary: "Excluir leitura",
 
                 parameters: [
@@ -423,7 +446,11 @@ const documentacao = {
                         }
                     }
                 ],
-
+                security: [
+                    {
+                        bearerAuth: []
+                    }
+                ],
                 responses: {
                     200: {
                         description: "Leitura removida com sucesso"

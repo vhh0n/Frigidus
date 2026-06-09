@@ -1,12 +1,15 @@
 import { Router } from "express";
 import { BD } from "../../db.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { autenticarToken } from "../middleware/autenticacao.js";
 
 const router = Router();
 
 // Listar ambientes
 router.get('/ambientes', async (req, res) => {
     try {
-        const ambientes = await BD.query('SELECT * FROM ambiente');
+        const ambientes = await BD.query('SELECT * FROM ambientes');
 
         return res.status(200).json(ambientes.rows);
     } catch (error) {
@@ -17,13 +20,13 @@ router.get('/ambientes', async (req, res) => {
     }
 });
 
-// Cadastrar ambiente
+// Cadastrar ambientes
 router.post('/ambientes', async (req, res) => {
     const { sala, temperatura_min, temperatura_max } = req.body;
 
     try {
         const comando = `
-            INSERT INTO ambiente
+            INSERT INTO ambientes
             (sala, temperatura_min, temperatura_max)
             VALUES ($1, $2, $3)
         `;
@@ -38,19 +41,19 @@ router.post('/ambientes', async (req, res) => {
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({
-            error: 'Erro ao cadastrar ambiente'
+            error: 'Erro ao cadastrar ambientes'
         });
     }
 });
 
-// Atualizar ambiente (PUT)
+// Atualizar ambientes (PUT)
 router.put('/ambientes/:id_ambiente', async (req, res) => {
     const { id_ambiente } = req.params;
     const { sala, temperatura_min, temperatura_max } = req.body;
 
     try {
         const verificar = await BD.query(
-            'SELECT * FROM ambiente WHERE id_ambiente = $1',
+            'SELECT * FROM ambientes WHERE id_ambiente = $1',
             [id_ambiente]
         );
 
@@ -61,7 +64,7 @@ router.put('/ambientes/:id_ambiente', async (req, res) => {
         }
 
         const comando = `
-            UPDATE ambiente
+            UPDATE ambientes
             SET sala = $1,
                 temperatura_min = $2,
                 temperatura_max = $3
@@ -84,18 +87,18 @@ router.put('/ambientes/:id_ambiente', async (req, res) => {
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({
-            error: 'Erro ao atualizar ambiente'
+            error: 'Erro ao atualizar ambientes'
         });
     }
 });
 
-// Excluir ambiente
+// Excluir ambientes
 router.delete('/ambientes/:id_ambiente', async (req, res) => {
     const { id_ambiente } = req.params;
 
     try {
         await BD.query(
-            'DELETE FROM ambiente WHERE id_ambiente = $1',
+            'DELETE FROM ambientes WHERE id_ambiente = $1',
             [id_ambiente]
         );
 

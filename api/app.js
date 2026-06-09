@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import { BD, testarConexao } from './db.js';
-import rotasAmbiente from './src/routes/rotasAmbiente.js';
-import rotasLeitura from './src/routes/rotasLeitura.js';
+import rotasAmbientes from './src/routes/rotasAmbientes.js';
+import rotasLeituras from './src/routes/rotasLeituras.js';
 import rotasUsuarios from './src/routes/rotasUsuarios.js';
-
+import rotasFiltros from './src/routes/rotasFiltros.js';
 import swaggerUi from 'swagger-ui-express';
 import documentacao from './config/swagger.js';
 
@@ -20,7 +20,8 @@ app.use(express.json());
 
 app.get('/swagger', (req, res) => {
 
-res.send(`<!DOCTYPE html>
+
+    res.send(`<!DOCTYPE html>
 
 <html><head>
 
@@ -36,17 +37,17 @@ res.send(`<!DOCTYPE html>
 
 <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
 
-<script>
+ <script>
 
-SwaggerUIBundle({
+ SwaggerUIBundle({
 
-spec: ${JSON.stringify(documentacao)},
+ spec: ${JSON.stringify(documentacao)},
 
-dom_id: '#swagger-ui'})
+ dom_id: '#swagger-ui'})
 
-</script>
+ </script>
 
-</body></html>`);
+ </body></html>`);
 
 });
 app.use(cors())
@@ -59,9 +60,10 @@ app.get('/', async (req, res) => {
 });
 
 // Rotas da API
-app.use(rotasAmbiente);
-app.use(rotasLeitura);
+app.use(rotasAmbientes);
+app.use(rotasLeituras);
 app.use(rotasUsuarios);
+app.use(rotasFiltros);
 
 // Inicialização do servidor
 const porta = 3000;

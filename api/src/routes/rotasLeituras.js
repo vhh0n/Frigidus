@@ -1,5 +1,9 @@
 import { Router } from "express";
 import { BD } from "../../db.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { autenticarToken } from "../middleware/autenticacao.js";
+
 
 const router = Router();
 
@@ -7,7 +11,7 @@ const router = Router();
 router.get('/leituras',  async (req, res) => {
     try {
         const comando = `
-            SELECT * FROM leitura
+            SELECT * FROM leituras
             ORDER BY data_hora DESC
         `;
 
@@ -20,13 +24,13 @@ router.get('/leituras',  async (req, res) => {
     }
 });
 
-// Buscar uma leitura por ID
+// Buscar uma leituras por ID
 router.get('/leituras/:id_leitura', async (req, res) => {
     const { id_leitura } = req.params;
 
     try {
         const comando = `
-            SELECT * FROM leitura
+            SELECT * FROM leituras
             WHERE id_leitura = $1
         `;
 
@@ -38,18 +42,18 @@ router.get('/leituras/:id_leitura', async (req, res) => {
 
         return res.status(200).json(resultado.rows[0]);
     } catch (error) {
-        console.error('Erro ao buscar leitura:', error.message);
-        return res.status(500).json({ error: 'Erro ao buscar leitura' });
+        console.error('Erro ao buscar leituras:', error.message);
+        return res.status(500).json({ error: 'Erro ao buscar leituras' });
     }
 });
 
-// Cadastrar nova leitura
+// Cadastrar nova leituras
 router.post('/leituras', async (req, res) => {
     const { id_ambiente, temperatura, umidade } = req.body;
 
     try {
         const comando = `
-            INSERT INTO leitura
+            INSERT INTO leituras
             (id_ambiente, temperatura, umidade)
             VALUES ($1, $2, $3)
             RETURNING *
@@ -77,7 +81,7 @@ router.put('/leituras/:id_leitura',  async (req, res) => {
 
     try {
         const verificar = await BD.query(
-            `SELECT * FROM leitura WHERE id_leitura = $1`,
+            `SELECT * FROM leituras WHERE id_leitura = $1`,
             [id_leitura]
         );
 
@@ -86,7 +90,7 @@ router.put('/leituras/:id_leitura',  async (req, res) => {
         }
 
         const comando = `
-            UPDATE leitura
+            UPDATE leituras
             SET id_ambiente = $1,
                 temperatura = $2,
                 umidade = $3
@@ -119,7 +123,7 @@ router.patch('/leituras/:id_leitura',  async (req, res) => {
 
     try {
         const verificar = await BD.query(
-            `SELECT * FROM leitura WHERE id_leitura = $1`,
+            `SELECT * FROM leituras WHERE id_leitura = $1`,
             [id_leitura]
         );
 
@@ -158,7 +162,7 @@ router.patch('/leituras/:id_leitura',  async (req, res) => {
         valores.push(id_leitura);
 
         const comando = `
-            UPDATE leitura
+            UPDATE leituras
             SET ${campos.join(', ')}
             WHERE id_leitura = $${contador}
         `;
@@ -181,7 +185,7 @@ router.delete('/leituras/:id_leitura', async (req, res) => {
 
     try {
         const comando = `
-            DELETE FROM leitura
+            DELETE FROM leituras
             WHERE id_leitura = $1
         `;
 
