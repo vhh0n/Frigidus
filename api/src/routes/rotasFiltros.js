@@ -21,7 +21,7 @@ router.get('/leituras/filtro', async (req, res) => {
     try {
         let sql = `
             SELECT *
-            FROM leitura
+            FROM leituras
             WHERE 1=1
         `;
 
@@ -62,7 +62,7 @@ router.get('/leituras/filtro', async (req, res) => {
             sql += ` AND umidade >= $${contador}`;
             valores.push(umidade_min);
             contador++;
-        }
+        }   
 
         if (umidade_max) {
             sql += ` AND umidade <= $${contador}`;
@@ -96,7 +96,7 @@ router.get('/leituras/media', async (req, res) => {
                 AVG(temperatura) AS media_temperatura,
                 AVG(umidade) AS media_umidade,
                 COUNT(*) AS total_leituras
-            FROM leitura
+            FROM leituras
             GROUP BY id_ambiente
             ORDER BY id_ambiente;
         `;
@@ -121,7 +121,7 @@ router.get('/leituras/recentes', async (req, res) => {
     try {
         const sql = `
             SELECT *
-            FROM leitura
+            FROM leituras
             ORDER BY data_hora DESC
             LIMIT 10;
         `;

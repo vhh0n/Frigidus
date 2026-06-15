@@ -61,9 +61,9 @@ app.get('/', async (req, res) => {
 
 // Rotas da API
 app.use(rotasAmbientes);
+app.use(rotasFiltros);
 app.use(rotasLeituras);
 app.use(rotasUsuarios);
-app.use(rotasFiltros);
 
 // Inicialização do servidor
 const porta = 3000;

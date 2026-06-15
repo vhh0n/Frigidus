@@ -190,19 +190,6 @@ const documentacao = {
                     401: { description: "Credenciais inválidas" },
                     500: { description: "Erro interno no servidor" }
                 }
-            },
-            delete: {
-                tags: ['Autenticação'],
-                summary: 'Deslogar',
-                description: "Desloga um usuario",
-                responses: {
-                    200: {
-                        description: "Logout realizado com sucesso!"
-                    },
-                    500: {
-                        description: "Erro interno no servidor"
-                    }
-                }
             }
         },
 
@@ -228,6 +215,7 @@ const documentacao = {
                             }
                         }
                     }
+                    
                 }
             }
         }
@@ -458,6 +446,173 @@ const documentacao = {
                 }
             }
         },
+
+        "/leituras/filtro": {
+    get: {
+        tags: ["Leituras"],
+        summary: "Filtrar leituras",
+        description: "Permite filtrar leituras por ambiente, período, temperatura e umidade",
+
+        security: [
+            {
+                bearerAuth: []
+            }
+        ],
+
+        parameters: [
+            {
+                name: "id_ambiente",
+                in: "query",
+                required: false,
+                schema: {
+                    type: "integer",
+                    example: 1
+                }
+            },
+            {
+                name: "data_inicio",
+                in: "query",
+                required: false,
+                schema: {
+                    type: "string",
+                    format: "date-time",
+                    example: "2026-06-01T00:00:00"
+                }
+            },
+            {
+                name: "data_fim",
+                in: "query",
+                required: false,
+                schema: {
+                    type: "string",
+                    format: "date-time",
+                    example: "2026-06-30T23:59:59"
+                }
+            },
+            {
+                name: "temp_min",
+                in: "query",
+                required: false,
+                schema: {
+                    type: "number",
+                    example: 18
+                }
+            },
+            {
+                name: "temp_max",
+                in: "query",
+                required: false,
+                schema: {
+                    type: "number",
+                    example: 25
+                }
+            },
+            {
+                name: "umidade_min",
+                in: "query",
+                required: false,
+                schema: {
+                    type: "number",
+                    example: 40
+                }
+            },
+            {
+                name: "umidade_max",
+                in: "query",
+                required: false,
+                schema: {
+                    type: "number",
+                    example: 80
+                }
+            }
+        ],
+
+        responses: {
+            200: {
+                description: "Leituras filtradas com sucesso",
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "array",
+                            items: {
+                                $ref: "#/components/schemas/Listar_Leitura"
+                            }
+                        }
+                    }
+                }
+            },
+            500: {
+                description: "Erro ao filtrar leituras"
+            }
+        }
+    }
+},
+
+"/leituras/media": {
+    get: {
+        tags: ["Leituras"],
+        summary: "Média das leituras por ambiente",
+        description: "Calcula média de temperatura e umidade agrupadas por ambiente",
+
+        security: [
+            {
+                bearerAuth: []
+            }
+        ],
+
+        responses: {
+            200: {
+                description: "Médias calculadas com sucesso",
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "array",
+                            items: {
+                                $ref: "#/components/schemas/Media_Leitura"
+                            }
+                        }
+                    }
+                }
+            },
+            500: {
+                description: "Erro ao calcular médias"
+            }
+        }
+    }
+},
+
+"/leituras/recentes": {
+    get: {
+        tags: ["Leituras"],
+        summary: "Últimas leituras",
+        description: "Retorna as 10 leituras mais recentes",
+
+        security: [
+            {
+                bearerAuth: []
+            }
+        ],
+
+        responses: {
+            200: {
+                description: "Leituras obtidas com sucesso",
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "array",
+                            items: {
+                                $ref: "#/components/schemas/Listar_Leitura"
+                            }
+                        }
+                    }
+                }
+            },
+            500: {
+                description: "Erro ao buscar leituras recentes"
+            }
+        }
+    }
+},
     },
     components: {
         securitySchemes: {
